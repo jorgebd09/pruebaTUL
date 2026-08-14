@@ -1,21 +1,40 @@
 policy:
-  policyId: "POL-APP-TRF-001"
-  description: "Especificacion XACML para Transferencias en App Movil"
+  id: "psg-payments-access"
+  name: "Grupo de control de acceso a pagos"
+  channel: "DBB"
+  transactionCode: "0120"
+  domain: "payments"
+  combiningAlgorithm: "deny-overrides"
+  defaultDecision: "Deny"
+  
   target:
-    channel: "APP_MOVIL"
-    transactionCode: "TX-TRF-001"
-    allowedActions:
-      - "EXECUTE"
-      - "SIMULATE"
-  rules:
-    - ruleId: "RULE-LIMIT-AMOUNT"
-      effect: "Permit"
-      condition:
-        maxAmount: 10000000
-        currency: "COP"
-        requiresMfa: true
-  obligations:
-    - obligationId: "OBL-AUDIT-LOG"
-      attributeAssignment:
-        logLevel: "INFO"
-        destination: "SPLUNK"
+    allOf:
+      - attribute: "resource.path"
+        operator: "ends-with"
+        value: "/api/v1/security-filters/ds-ms-dr-nequi/transfer-registered-nequi"
+      - attribute: "action.httpMethod"
+        operator: "equals"
+        value: "POST"
+        
+  policySets:
+    - ref: "ps-payments-access"
+      version: "1.0.0"
+      
+  policies:
+    - type: "SHARED"
+      ref: "pol-shared-fraud-check"
+      version: "2.1.0"
+      
+    - type: "INLINE"
+      id: "pol-nequi-validation"
+      name: "Validación específica"
+      ruleCombiningAlgorithm: "deny-overrides"
+      attributes:
+        - "nequi.account.registered"
+      rules:
+        - id: "deny-not-registered"
+          effect: "Deny"
+          condition:
+            attribute: "nequi.account.registered"
+            operator: "equals"
+            value: false
