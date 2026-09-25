@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: attributeprovider
+metadata:
+  id: "ap-001"
+  name: "AttributeProvider 001"
+  description: "Descripcion del provider"
+  domain: "DBB"
+  owner: "equipo-x"
+  version: "1.0.0"
+  status: "active"
+spec:
+  configuration:
+    url: "https://example.com"
