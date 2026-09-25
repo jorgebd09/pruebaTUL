@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: rule
 metadata:
-  id: "0120"
+  id: "rule-001"
   name: "Regla 0120"
   description: "Descripcion de la regla"
   domain: "DBB"
