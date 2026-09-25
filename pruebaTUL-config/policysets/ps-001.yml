@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: policyset
+metadata:
+  id: "ps-001"
+  name: "PolicySet 001"
+  description: "Descripcion del policyset"
+  domain: "DBB"
+  owner: "equipo-x"
+  version: "1.0.0"
+  status: "active"
+spec:
+  combiningAlgorithm: "deny-overrides"
+  policies:
+    - id: "pol-001"
+      version: "1.0.0"
