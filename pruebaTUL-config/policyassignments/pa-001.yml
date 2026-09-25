@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: policyassignment
+metadata:
+  id: "pa-001"
+  name: "PolicyAssignment 001"
+  description: "Descripcion del policy assignment"
+  domain: "DBB"
+  owner: "equipo-x"
+  version: "1.0.0"
+  status: "active"
+spec:
+  channel: "web"
+  transactionCode: "1234"
+  defaultDecision: "deny"
+  combiningAlgorithm: "deny-overrides"
+  target:
+    operator: "equals"
+    attribute: "channel"
+    value: "web"
+  policySets:
+    - id: "ps-001"
+      version: "1.0.0"
