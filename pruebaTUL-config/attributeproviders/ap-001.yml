@@ -1,13 +1,35 @@
-apiVersion: v1
-kind: attributeprovider
+apiVersion: abac.galatea.bancolombia.com/v1
+kind: AttributeProvider
 metadata:
-  id: "ap-001"
-  name: "AttributeProvider 001"
-  description: "Descripcion del provider"
-  domain: "DBB"
-  owner: "equipo-x"
-  version: "1.0.0"
-  status: "active"
+  id: ap-jwt-validation
+  name: Proveedor de atributos de validación JWT
+  version: 1.0.0
+  owner: identity-security
+  status: ACTIVE
 spec:
-  configuration:
-    url: "https://example.com"
+  resolver:
+    type: http
+    protocol: https
+    timeout: 15000
+    operation:
+      method: POST
+      url: https://.../transactionalRiskAssessment
+    requestTemplate: "{ ... }"
+  security:
+    credential:
+      type: client-credentials
+      apic: nu0051001-d2b-dev-banking-core-dbb
+      digitalCertificate: nu0051001-...-multi-context
+  provides:
+    - attribute: authentication.token.valid
+      dataType: boolean
+  inputMapping:
+    body.token: $.request.headers.Authorization
+  responseMappings:
+    - when: { statusCode: 200 }
+      attributes: { authentication.token.valid: true, authentication.token.status: VALID }
+  defaultResponseMappings:
+    authentication.token.valid: false
+  failureHandling:
+    timeout: { result: false, reasonCode: AUTH001_TIMEOUT }
+
