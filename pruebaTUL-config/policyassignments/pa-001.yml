@@ -14,37 +14,37 @@ spec:
   defaultDecision: "deny"
   combiningAlgorithm: "deny-overrides"
   target:
-  allOf:
-    - allOf:
-        - attribute: resource.path
-          type: string
-          operator: ends-with
-          value: /api/v1/security-filters/ds-ms-dr-nequi/transfer-registered-nequi
-        - attribute: action.httpMethod
-          type: string
-          operator: equals
-          value: POST
-    - anyOf:
-        - attribute: resource.path
-          type: string
-          operator: ends-with
-          value: /api/v1/mcp/ds-ms-dr-nequi/transfer-registered-nequi
-        - attribute: action.mcpMethod
-          type: string
-          operator: equals
-          value: tools/call
-        - attribute: resource.mcpToolName
-          type: string
-          operator: equals
-          value: checkCustomerControlLists
-        - attribute: resource.count
-          type: integer
-          operator: equals
-          value: 1
-        - attribute: resource.dec
-          type: decimal
-          operator: greater-than
-          value: 1.5
+    allOf:
+      - allOf:
+          - attribute: resource.path
+            type: string
+            operator: ends-with
+            value: /api/v1/security-filters/ds-ms-dr-nequi/transfer-registered-nequi
+          - attribute: action.httpMethod
+            type: string
+            operator: equals
+            value: POST
+      - anyOf:
+          - attribute: resource.path
+            type: string
+            operator: ends-with
+            value: /api/v1/mcp/ds-ms-dr-nequi/transfer-registered-nequi
+          - attribute: action.mcpMethod
+            type: string
+            operator: equals
+            value: tools/call
+          - attribute: resource.mcpToolName
+            type: string
+            operator: equals
+            value: checkCustomerControlLists
+          - attribute: resource.count
+            type: integer
+            operator: equals
+            value: 1
+          - attribute: resource.dec
+            type: decimal
+            operator: greater-than
+            value: 1.5
   policySets:
     - id: "ps-001"
       version: "1.0.0"
