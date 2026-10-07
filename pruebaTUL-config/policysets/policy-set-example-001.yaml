@@ -1,0 +1,15 @@
+apiVersion: abac.galatea.bancolombia.com/v1
+kind: PolicySet
+metadata:
+  id: policyset-payment-authentication
+  name: Grupo de políticas de autenticación de pagos
+  description: Es un grupo de políticas de de pagos.
+  domain: payments
+  owner: payments-security
+  version: 1.0.0
+  status: ACTIVE
+spec:
+  combiningAlgorithm: deny-unless-permit
+  policies:
+    - id: policy-payment-authentication
+      version: 1.0.0
