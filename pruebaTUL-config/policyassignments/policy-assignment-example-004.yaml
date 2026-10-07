@@ -1,0 +1,29 @@
+apiVersion: abac.galatea.bancolombia.com/v1
+kind: PolicyAssignment
+metadata:
+  id: pass-payment-authentication-other-example-3
+  name: Control de acceso a pagos
+  description: Es un grupo de políticas de de pagos.
+  domain: payments
+  owner: payments-security
+  version: 1.0.0
+  status: ACTIVE
+spec:
+  channel: "DBB"
+  transactionCode: "0120"
+  target:
+    anyOf:
+      - attribute: resource.path
+        type: string
+        operator: ends-with
+        value: "/api/v1/security-filters/ds-ms-dr-nequi/transfer-registered-nequi"
+      - attribute: action.httpMethod
+        type: string
+        operator: equals
+        value: POST
+
+  defaultDecision: "Deny"
+  combiningAlgorithm: "deny-unless-permit"
+  policySets:
+    - id: policyset-payment-authentication
+      version: 1.0.0
