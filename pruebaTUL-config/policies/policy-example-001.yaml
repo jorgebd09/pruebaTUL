@@ -1,0 +1,15 @@
+apiVersion: abac.galatea.bancolombia.com/v1
+kind: Policy
+metadata:
+  id: policy-payment-authentication
+  name: Política de autenticación de pagos
+  description: Valida el token y los permisos necesarios para ejecutar pagos.
+  domain: payments
+  owner: payments-security
+  version: 1.0.0
+  status: ACTIVE
+spec:
+  combiningAlgorithm: deny-unless-permit
+  rules:
+    - id: rule-deny-invalid-token
+      version: 1.0.0
