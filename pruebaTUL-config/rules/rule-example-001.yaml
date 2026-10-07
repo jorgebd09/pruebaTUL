@@ -1,0 +1,18 @@
+apiVersion: abac.galatea.bancolombia.com/v1
+kind: Rule
+metadata:
+  id: rule-deny-invalid-token
+  name: Regla de denegación por invalidez de token
+  description: Deniega la regla si el token es invalido.
+  domain: payments
+  owner: payments-security
+  version: 1.0.0
+  status: ACTIVE
+spec:
+  effect: Deny
+  condition:
+    attribute: authentication.token.valid
+    type: boolean
+    operator: not-equals
+    value: true
+  decisionReason: RULE_AUTH001_INVALID_TOKEN # validar esto
