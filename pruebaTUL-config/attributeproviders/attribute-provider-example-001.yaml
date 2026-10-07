@@ -1,0 +1,74 @@
+apiVersion: abac.galatea.bancolombia.com/v1
+kind: AttributeProvider
+metadata:
+  id: ap-payment-limits
+  name: Proveedor de atributos de límites transaccionales
+  version: 1.0.0
+  owner: payments-security
+  status: ACTIVE
+
+resolver:
+  type: http
+  protocol: http
+  timeout: 3000
+  operation:
+    method: GET
+    url: http://localhost:3005/customers-amount-limits/validate
+
+authentication:
+  type: jwt
+  name: nu0051001-d2b-qa-banking-core-dbb
+  jwt:
+    secret:
+      headerMappings:
+        client-id: client-id
+        client-secret: client-secret
+    headerName: json-web-token
+    claims:
+      aud: APIGateway_LAN
+      iss: NU0051001
+    certificate:
+      headerName: x-client-certificate
+      secretName: nu0350001-d2bem-qa-secret-digital-certificate-banking-core-multi-context
+      deleteHeadersCertificate: true
+
+provides:
+  - attribute: payment.limit.allowed
+    dataType: boolean
+  - attribute: payment.limit.status
+    dataType: string
+  - attribute: payment.limit.reasonCode
+    dataType: string
+  - attribute: payment.limit.maximumAmount
+    dataType: decimal
+
+inputMapping:
+  body.customerId: "$.request.customerId"
+  body.productId: "$.request.payment.productId"
+  headers.Content-Type: application/json
+
+responseMappings:
+  - when:
+      statusCode: 200
+    attributes:
+      payment.limit.allowed: true
+      payment.limit.status: WITHIN_LIMIT
+      payment.limit.reasonCode: LIMIT_VALID
+      payment.limit.maximumAmount: "$.data.limit"
+  - when:
+      statusCode: 404
+    attributes:
+      payment.limit.allowed: false
+      payment.limit.status: LIMIT_CONFIGURATION_NOT_FOUND
+      payment.limit.reasonCode: LIMIT001_CONFIGURATION_NOT_FOUND
+
+failureHandling:
+  timeout:
+    result: false
+    reasonCode: LIMIT003_TIMEOUT
+  connectionError:
+    result: false
+    reasonCode: LIMIT004_UNAVAILABLE
+  unmappedResponse:
+    result: false
+    reasonCode: LIMIT005_UNEXPECTED_RESPONSE
